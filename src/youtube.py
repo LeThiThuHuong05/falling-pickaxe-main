@@ -5,6 +5,12 @@ from pathlib import Path
 from dateutil import parser
 import os
 import re
+import sys
+
+if getattr(sys, 'frozen', False):
+    exe_dir = os.path.dirname(sys.executable)
+else:
+    exe_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Initialize YouTube API client
 youtube = build("youtube", "v3", developerKey=config["API_KEY"])
@@ -106,7 +112,7 @@ def get_new_live_chat_messages(live_chat_id):
     ).execute()
 
     # Define log directory
-    log_dir = Path(__file__).parent.parent / "logs"
+    log_dir = Path(exe_dir) / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
 
     # Generate log file path

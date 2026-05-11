@@ -18,6 +18,18 @@ import random
 from hud import Hud
 from collections import deque
 
+import sys
+import os
+
+if getattr(sys, 'frozen', False):
+    # Running in a bundle (PyInstaller)
+    bundle_dir = sys._MEIPASS
+    exe_dir = os.path.dirname(sys.executable)
+else:
+    # Running in normal Python environment
+    bundle_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    exe_dir = bundle_dir
+
 # Track key states
 key_t_pressed = False
 key_m_pressed = False
@@ -188,14 +200,14 @@ def game():
     scaled_surface = pygame.Surface(screen_size).convert()
     pygame.display.set_caption("Falling Pickaxe")
     # set icon
-    icon = pygame.image.load(Path(__file__).parent.parent / "src/assets/pickaxe" / "diamond_pickaxe.png")
+    icon = pygame.image.load(Path(bundle_dir) / "src/assets/pickaxe" / "diamond_pickaxe.png")
     pygame.display.set_icon(icon)
 
     # Create an internal surface with fixed resolution
     internal_surface = pygame.Surface((INTERNAL_WIDTH, INTERNAL_HEIGHT))
 
     # Load texture atlas
-    assets_dir = Path(__file__).parent.parent / "src/assets"
+    assets_dir = Path(bundle_dir) / "src/assets"
     (texture_atlas, atlas_items) = create_texture_atlas(assets_dir)
 
     # Load background
@@ -466,7 +478,7 @@ def game():
         explosions = [e for e in explosions if e.particles]
 
         # Draw HUD
-        hud.draw(internal_surface, pickaxe.body.position.y, fast_slow_active, fast_slow)
+        hud.draw(internal_surface, pickaxe.body.position.y, fast_slow_active, fast_slow, config["CHAT_CONTROL"])
 
         # Scale internal surface to fit the resized window
         pygame.transform.scale(internal_surface, (window_width, window_height), scaled_surface)
@@ -478,7 +490,7 @@ def game():
             print("Saving progress...")
             last_save_progress = current_time
             # Save progress to logs folder
-            log_dir = Path(__file__).parent.parent / "logs"
+            log_dir = Path(exe_dir) / "logs"
             log_dir.mkdir(parents=True, exist_ok=True)
             with open(log_dir / "progress.txt", "a+") as f:
                 f.write(f"Date: {time.strftime('%Y-%m-%d %H:%M:%S')} | ")
