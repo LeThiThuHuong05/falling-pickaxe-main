@@ -7,6 +7,8 @@ If you consider streaming this game on your own youtube channel, please add cred
 ### Quick Start (Recommended)
 The easiest way to run the game is using the automated scripts that handle everything for you:
 
+Open PowerShell in the game directory and run:
+
 **For Windows:**
 ```
 ./scripts/run.ps1
@@ -65,7 +67,7 @@ Steps 2 to 6 are **optional**. You can disable the entire YouTube integration by
 **Symptoms:**
 When running `./scripts/run.ps1`, PowerShell shows an error:
 `...cannot be loaded. The file is not digitally signed. You cannot run this script on the current system.`
-
+![alt text](image.png)
 **Cause:**
 Windows default security (Execution Policy) is preventing the execution of unsigned scripts.
 
@@ -75,6 +77,16 @@ Open PowerShell in the game directory and run the following command to allow scr
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass
 ```
+
+If you see bug like this: ![alt text](image-1.png) You can run powershell as administrator and run the command again. 
+
+if still not working, try:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+```
+
+
 
 After running this command, you can run `./scripts/run.ps1` normally.
 
