@@ -211,7 +211,7 @@ def game():
     (texture_atlas, atlas_items) = create_texture_atlas(assets_dir)
 
     # Load background
-    background_image = pygame.image.load(assets_dir / "background.png")
+    background_image = pygame.image.load(assets_dir / "background.jpg")
     background_scale_factor = 1.5
     background_width = int(background_image.get_width() * background_scale_factor)
     background_height = int(background_image.get_height() * background_scale_factor)
@@ -478,7 +478,7 @@ def game():
         explosions = [e for e in explosions if e.particles]
 
         # Draw HUD
-        hud.draw(internal_surface, pickaxe.body.position.y, fast_slow_active, fast_slow, config["CHAT_CONTROL"])
+        hud.draw(internal_surface, pickaxe.body.position.y, fast_slow_active, fast_slow)
 
         # Scale internal surface to fit the resized window
         pygame.transform.scale(internal_surface, (window_width, window_height), scaled_surface)
@@ -511,13 +511,14 @@ def game():
         # Inside the main loop
         keys = pygame.key.get_pressed()
 
-               # Giả lập chat và tạo TNT có tên ngay lập tức
+        # Giả lập chat và tạo TNT có tên ngay lập tức
         if keys[pygame.K_c]:
             if not key_c_pressed: # Thêm biến check để tránh nhấn 1 lần ra cả trăm quả
-                print("Đã giả lập TNT từ Người Chơi 1")
+                random_name = random.choice(["CyCy", "MeoMeo", "GauGau", "CunCon", "HeoDat", "Pikachu", "Doraemon", "Nobita"])
+                print(f"Đã giả lập TNT từ {random_name}")
                 # Tạo trực tiếp khối TNT và gán tên luôn
                 new_tnt = Tnt(space, pickaxe.body.position.x, pickaxe.body.position.y - 100,
-                             texture_atlas, atlas_items, sound_manager, owner_name="CyCy")
+                             texture_atlas, atlas_items, sound_manager, owner_name=random_name)
                 tnt_list.append(new_tnt)
             key_c_pressed = True
         else:

@@ -61,9 +61,6 @@ class Hud:
         self.pickaxe_indicator_surface = None
         self.fast_slow_cache = None
         self.fast_slow_surface = None
-        self.chat_control_cache = None
-        self.chat_control_surface = None
-
     def update_amounts(self, new_amounts):
         """
         Update the ore amounts.
@@ -71,7 +68,7 @@ class Hud:
         """
         self.amounts.update(new_amounts)
 
-    def draw(self, screen, pickaxe_y, fast_slow_active, fast_slow, chat_control_active):
+    def draw(self, screen, pickaxe_y, fast_slow_active, fast_slow):
         """
         Draws the HUD: each ore icon with its amount and other indicators.
         """
@@ -117,13 +114,3 @@ class Hud:
         fast_slow_x = x + self.spacing
         fast_slow_y = y + 2 * self.spacing + self.fast_slow_surface.get_height()
         screen.blit(self.fast_slow_surface, (fast_slow_x, fast_slow_y))
-
-        # Draw the chat control indicator
-        chat_text = "Chat: ON" if chat_control_active else "Chat: OFF"
-        chat_color = (100, 255, 100) if chat_control_active else (255, 100, 100)
-        if self.chat_control_cache != chat_text:
-            self.chat_control_surface = render_text_with_outline(chat_text, self.font, chat_color, (0, 0, 0), outline_width=2)
-            self.chat_control_cache = chat_text
-        chat_control_x = x + self.spacing
-        chat_control_y = fast_slow_y + self.fast_slow_surface.get_height() + self.spacing
-        screen.blit(self.chat_control_surface, (chat_control_x, chat_control_y))

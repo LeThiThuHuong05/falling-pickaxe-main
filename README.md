@@ -151,3 +151,28 @@ Step into the world of **Falling Pickaxe**, the most addictive and interactive m
 - **Community-Driven Challenges:** Host live competitions, subscriber challenges, and donation-triggered events that make every stream a unique and engaging event. Build a loyal community and watch your subscriber count soar!
 
 Transform your YouTube channel into a money-making, interactive gaming hub with **Falling Pickaxe** – the ultimate mining adventure that delivers explosive action, high viewer engagement, and serious revenue potential. Start streaming today and experience the thrill of interactive arcade gaming like never before!
+
+*** build exe
+```
+.venv\Scripts\pyinstaller.exe --noconfirm --name falling-pickaxe --onefile --windowed --paths src --add-data "src/assets;src/assets" --add-data "default.config.json;." run.py
+```
+
+
+
+🧨 Các lệnh liên quan đến TNT:
+tnt: Thả một khối TNT bình thường xuống với tên của người bình luận.
+⚡ Các lệnh liên quan đến Tốc độ & Kích thước:
+fast: Tăng tốc độ rơi của đồ vật (Chế độ nhanh).
+slow: Giảm tốc độ rơi của đồ vật (Chế độ chậm).
+big: Phóng to kích thước của cuốc (Cúp) đang rơi.
+⛏️ Các lệnh thả Cuốc (Cúp) theo chất liệu:
+wood: Thả cuốc gỗ (Wooden Pickaxe).
+stone: Thả cuốc đá (Stone Pickaxe).
+iron: Thả cuốc sắt (Iron Pickaxe).
+gold: Thả cuốc vàng (Golden Pickaxe).
+diamond: Thả cuốc kim cương (Diamond Pickaxe).
+netherite: Thả cuốc Netherite (Netherite Pickaxe).
+🌟 Ngoài ra còn có các hành động tự động (không cần gõ lệnh):
+
+Tặng Superchat / Supersticker: Game sẽ tự động thả một phần thưởng Superchat TNT siêu lớn.
+Đăng ký kênh mới (New Subscriber): Game sẽ tự động kích hoạt một quả Mega TNT.
