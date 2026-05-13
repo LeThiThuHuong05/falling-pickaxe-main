@@ -2,7 +2,7 @@ import time
 import pygame
 import pymunk
 import pymunk.pygame_util
-from youtube import get_live_stream, get_new_live_chat_messages, get_live_chat_id, get_subscriber_count, validate_live_stream_id
+from youtube import get_live_stream, get_new_live_chat_messages, get_live_chat_id, get_subscriber_count, validate_live_stream_id, get_like_count
 from config import config
 from atlas import create_texture_atlas
 from pathlib import Path
@@ -39,6 +39,7 @@ key_c_pressed = False
 live_stream = None
 live_chat_id = None
 subscribers = None
+likes = None
 
 if config["CHAT_CONTROL"] == True:
     try:
@@ -71,6 +72,16 @@ if config["CHAT_CONTROL"] == True:
             print("No subscribers count found. App will run without it.")
         else:
             print("Subscribers count found:", subscribers)
+
+        # get likes count
+        if live_stream is not None:
+            print("Fetching likes count...")
+            likes = get_like_count(live_stream["id"])
+
+        if likes is None:
+            print("No likes count found. App will run without it.")
+        else:
+            print("Likes count found:", likes)
     except Exception as e:
         print(f"YouTube Connection Error: {e}")
         print("Running game in offline mode.")
@@ -93,12 +104,23 @@ mega_tnt_queue = deque()
 
 async def handle_youtube_poll():
     global subscribers # Use global to modify the variable
+    global likes
 
     if subscribers is not None:
         new_subscribers = get_subscriber_count(config["CHANNEL_ID"])
         if new_subscribers is not None and new_subscribers > subscribers:
             mega_tnt_queue.append("New Subscriber") # Add to mega tnt queue
             subscribers = new_subscribers # Update subscriber count
+
+    if live_stream is not None:
+        new_likes = get_like_count(live_stream["id"])
+        if new_likes is not None:
+            if likes is not None and new_likes > likes:
+                for _ in range(new_likes - likes):
+                    tnt_queue.append("Like!")
+                    tnt_queue_authors.add("Like!")
+                    print("Added New Like to TNT queue")
+            likes = new_likes
 
     new_messages = get_new_live_chat_messages(live_chat_id)
 

@@ -170,3 +170,16 @@ def get_subscriber_count(channel_id):
         return int(response["items"][0]["statistics"]["subscriberCount"])
     else:
         return None
+
+def get_like_count(video_id):
+    """Get the like count for a given video ID."""
+    request = youtube.videos().list(
+        part="statistics",
+        id=video_id
+    )
+    response = request.execute()
+
+    if response.get("items"):
+        return int(response["items"][0]["statistics"].get("likeCount", 0))
+    else:
+        return None
