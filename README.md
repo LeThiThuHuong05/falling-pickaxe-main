@@ -67,7 +67,7 @@ Steps 2 to 6 are **optional**. You can disable the entire YouTube integration by
 **Symptoms:**
 When running `./scripts/run.ps1`, PowerShell shows an error:
 `...cannot be loaded. The file is not digitally signed. You cannot run this script on the current system.`
-![alt text](image.png)
+![alt text](./src/assets/instruction/bug_1.png)
 **Cause:**
 Windows default security (Execution Policy) is preventing the execution of unsigned scripts.
 
@@ -78,7 +78,7 @@ Open PowerShell in the game directory and run the following command to allow scr
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass
 ```
 
-If you see bug like this: ![alt text](image-1.png) You can run powershell as administrator and run the command again. 
+If you see bug like this: ![alt text](./src/assets/instruction/bug_2.png) You can run powershell as administrator and run the command again. 
 
 if still not working, try:
 
