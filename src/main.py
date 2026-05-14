@@ -289,7 +289,7 @@ def game():
     camera = Camera()
 
     # HUD
-    hud = Hud(texture_atlas, atlas_items)
+    hud = Hud(texture_atlas, atlas_items, assets_dir)
 
     # Explosions
     explosions = []

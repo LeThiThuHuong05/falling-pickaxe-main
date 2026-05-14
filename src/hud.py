@@ -21,7 +21,7 @@ def render_text_with_outline(text, font, text_color, outline_color, outline_widt
     return outline_surface
 
 class Hud:
-    def __init__(self, texture_atlas, atlas_items, position=(32, 32)):
+    def __init__(self, texture_atlas, atlas_items, assets_dir, position=(32, 32)):
         """
         :param texture_atlas: The atlas surface containing the item icons.
         :param atlas_items: A dict with keys under "item" for each ore.
@@ -43,6 +43,27 @@ class Hud:
         }
 
         self.position = position
+        self.assets_dir = assets_dir
+        self.info_command_img = None
+        info_command_path = assets_dir / "info" / "info_commands.png"
+        if info_command_path.exists():
+            self.info_command_img = pygame.image.load(info_command_path).convert_alpha()
+            # Scale the image if it's too large, or just keep it as is.
+            # For now, let's keep it as is or maybe scale it to a reasonable width.
+            # If INTERNAL_WIDTH is 1080, a width of 400 seems okay.
+            original_w, original_h = self.info_command_img.get_size()
+            target_w = 300
+            target_h = int(original_h * (target_w / original_w))
+            self.info_command_img = pygame.transform.scale(self.info_command_img, (target_w, target_h))
+
+        self.info_sub_img = None
+        info_sub_path = assets_dir / "info" / "info_sub.png"
+        if info_sub_path.exists():
+            self.info_sub_img = pygame.image.load(info_sub_path).convert_alpha()
+            original_w, original_h = self.info_sub_img.get_size()
+            target_w = 500  # Center info can be a bit larger
+            target_h = int(original_h * (target_w / original_w))
+            self.info_sub_img = pygame.transform.scale(self.info_sub_img, (target_w, target_h))
         self.icon_size = (64, 64)  # Size to draw each icon
         self.spacing = 15  # Space between items
 
@@ -72,6 +93,20 @@ class Hud:
         """
         Draws the HUD: each ore icon with its amount and other indicators.
         """
+        # Draw the info command image at the top right
+        if self.info_command_img:
+            margin = 20
+            img_x = screen.get_width() - self.info_command_img.get_width()
+            img_y = margin
+            screen.blit(self.info_command_img, (img_x, img_y))
+
+        # Draw the info sub image at the top center
+        if self.info_sub_img:
+            margin = 20
+            img_x = (screen.get_width() - self.info_sub_img.get_width()) // 2 - 80
+            img_y = margin
+            screen.blit(self.info_sub_img, (img_x, img_y))
+
         x, y = self.position
 
         for ore, amount in self.amounts.items():
