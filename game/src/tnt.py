@@ -102,6 +102,8 @@ class Tnt:
     def update(self, tnt_list, explosions, camera, current_time=None):
         if self.detonated:
             self.space.remove(self.body, self.shape)
+            if hasattr(self, 'shape') and hasattr(self.shape, 'block_ref'):
+                self.shape.block_ref = None
             if self in tnt_list:
                 tnt_list.remove(self)
             return
@@ -171,6 +173,8 @@ class MegaTnt(Tnt):
     def update(self, tnt_list, explosions, camera, current_time=None):
         if self.detonated:
             self.space.remove(self.body, self.shape)
+            if hasattr(self, 'shape') and hasattr(self.shape, 'block_ref'):
+                self.shape.block_ref = None
             if self in tnt_list:
                 tnt_list.remove(self)
             return

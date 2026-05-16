@@ -132,6 +132,9 @@ def _remove_block_from_space(block, space):
     try:
         if block.body in space.bodies or block.shape in space.shapes:
             space.remove(block.body, block.shape)
+        # Break circular reference to allow Garbage Collection to free memory
+        if hasattr(block, 'shape') and hasattr(block.shape, 'block_ref'):
+            block.shape.block_ref = None
     except Exception:
         pass
 
