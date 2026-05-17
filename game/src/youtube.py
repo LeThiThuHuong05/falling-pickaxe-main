@@ -6,6 +6,7 @@ from dateutil import parser
 import os
 import re
 import sys
+import json
 
 if getattr(sys, 'frozen', False):
     exe_dir = os.path.dirname(sys.executable)
@@ -104,12 +105,50 @@ def get_live_chat_messages(live_chat_id):
 
 # Global set to track seen message IDs
 seen_messages = set()
+next_page_token = None
+current_chat_id = None
+
+TOKEN_FILE = os.path.join(exe_dir, "chat_token.json")
+
+def load_page_token(chat_id):
+    if os.path.exists(TOKEN_FILE):
+        try:
+            with open(TOKEN_FILE, "r") as f:
+                data = json.load(f)
+                return data.get(chat_id)
+        except:
+            pass
+    return None
+
+def save_page_token(chat_id, token):
+    data = {}
+    if os.path.exists(TOKEN_FILE):
+        try:
+            with open(TOKEN_FILE, "r") as f:
+                data = json.load(f)
+        except:
+            pass
+    data[chat_id] = token
+    with open(TOKEN_FILE, "w") as f:
+        json.dump(data, f)
+
 def get_new_live_chat_messages(live_chat_id):
     """Fetch and print only new chat messages (including super chats and super stickers) that haven't been printed before."""
-    response = youtube.liveChatMessages().list(
+    global next_page_token, current_chat_id
+
+    if current_chat_id != live_chat_id:
+        current_chat_id = live_chat_id
+        next_page_token = load_page_token(live_chat_id)
+
+    request = youtube.liveChatMessages().list(
         liveChatId=live_chat_id,
-        part="snippet,authorDetails"
-    ).execute()
+        part="snippet,authorDetails",
+        pageToken=next_page_token
+    )
+    response = request.execute()
+
+    next_page_token = response.get("nextPageToken", next_page_token)
+    save_page_token(live_chat_id, next_page_token)
 
     # Define log directory
     log_dir = Path(exe_dir) / "logs"

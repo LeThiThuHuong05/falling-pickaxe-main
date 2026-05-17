@@ -176,3 +176,5 @@ netherite: Thả cuốc Netherite (Netherite Pickaxe).
 
 Tặng Superchat / Supersticker: Game sẽ tự động thả một phần thưởng Superchat TNT siêu lớn.
 Đăng ký kênh mới (New Subscriber): Game sẽ tự động kích hoạt một quả Mega TNT.
+
+.venv\Scripts\python.exe -m PyInstaller falling-pickaxe.spec

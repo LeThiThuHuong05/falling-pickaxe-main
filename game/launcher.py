@@ -6,8 +6,7 @@ from tkinter import messagebox, ttk
 
 CONFIG_FILE = "config.json"
 DEFAULT_CONFIG_FILE = "default.config.json"
-REQUIREMENTS_FILE = "requirements.txt"
-RUN_SCRIPT = ".\\scripts\\run.ps1"
+GAME_EXE = "falling-pickaxe.exe"
 
 class LauncherApp:
     def __init__(self, root):
@@ -98,50 +97,17 @@ class LauncherApp:
         run_btn = tk.Button(btn_frame, text="Run Game", command=self.run_game, bg="#2196F3", fg="white", font=("Arial", 11, "bold"))
         run_btn.pack(side="right", padx=5)
 
-    def apply_readme_fixes(self):
-        fixes_applied = []
-        
-        # 1. Fix Execution Policy
-        try:
-            subprocess.run(["powershell", "-Command", "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass"], check=True)
-            fixes_applied.append("Bypassed PowerShell Execution Policy")
-        except Exception as e:
-            print(f"Failed to set execution policy: {e}")
-
-        # 2. Fix Pygame Installation Error (pygame-ce)
-        try:
-            if os.path.exists(REQUIREMENTS_FILE):
-                with open(REQUIREMENTS_FILE, "r", encoding="utf-8") as f:
-                    lines = f.readlines()
-                
-                changed = False
-                for i, line in enumerate(lines):
-                    if line.strip().startswith("pygame=="):
-                        lines[i] = "pygame-ce==2.5.7\n"
-                        changed = True
-                        break
-                
-                if changed:
-                    with open(REQUIREMENTS_FILE, "w", encoding="utf-8") as f:
-                        f.writelines(lines)
-                    fixes_applied.append("Updated requirements.txt to use pygame-ce==2.5.7")
-        except Exception as e:
-            print(f"Failed to modify requirements: {e}")
-
-        return fixes_applied
-
     def run_game(self):
         self.save_config()
-        
-        # Apply automatic fixes before running to prevent errors described in README
-        fixes = self.apply_readme_fixes()
-        if fixes:
-            print("Applied automatic fixes from README:\n- " + "\n- ".join(fixes))
+
+        if not os.path.exists(GAME_EXE):
+            messagebox.showerror("Error", f"Could not find game executable: {GAME_EXE}")
+            return
 
         try:
-            # We open the powershell script in a new console window to show output
+            # We open the game exe directly
             subprocess.Popen(
-                ["powershell", "-ExecutionPolicy", "Bypass", "-File", RUN_SCRIPT],
+                [GAME_EXE],
                 cwd=os.getcwd(),
                 creationflags=subprocess.CREATE_NEW_CONSOLE
             )
